@@ -124,7 +124,7 @@ shinyServer(function(input, output) {
 
     survey.questions.selected <- reactive({
         survey.questions.ordered() %>%
-            head(questions.n) %>%
+            head(input$questions.n) %>%
             mutate(label=survey.labels()[question]) %>%
             left_join(survey.answers.freq()) %>%
             tidyr::pivot_longer(c(freq_aoi, freq_baseline),

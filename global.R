@@ -18,7 +18,6 @@ surveys.data <- utils.surveys_data(force=F)
 surveys <- names(surveys.data)
 
 # Removed from UI for the moment
-questions.n <- 4
 metric <- "area"
 
 # data.labels <- utils.labels(data.raw)
