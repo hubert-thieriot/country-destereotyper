@@ -32,14 +32,15 @@ metrics <- list("Area between curves"="area",
                 "Entropy-like"="entropy")
 
 # Keywords to highlight in titles
-keywords <- c("economy", "better off", "worse off", "democracy", "religion", "The United States",
-              "China", "Russia", "The European Union", "The United Nations",
-              "Germany","France","United Kingdom", "Brexit", "1989 / 1991",
+keywords <- c("economy", "better off", "worse off", "democracy", "religion", "United States",
+              "China", "Russia", "European Union", "United Nations", "North Atlantic Treaty Organization",
+              "Germany","France","United Kingdom", "Brexit", "1989 / 1991", "Roma", "foreign companies",
               "culture", "rich", "poor", "well-paying jobs", "education system", "political system",
               "military", "believe in God", "Homosexuality", "diverse", "prayer", "god",
               "economic situation","neighboring countries", "traveled", "women", "Vladimir Putin",
               "Angela Merkel", "Muslims", "internet", "jobs", "Kim Jong-Un", "Donald Trump",
-              "North Korean", "benefit of all the people", "state",
+              "North Korean", "benefit of all the people", "state", "government", "Emmanuel Macron",
+              "extreme left", "extreme right",
               "freedom of speech", "immigrants", "immigration", "trade", "wages",
               "politicians are corrupt", "major global problems", "U\\.S\\.", "scenarios","crime")
 rm("data.raw")
