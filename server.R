@@ -6,12 +6,12 @@ shinyServer(function(input, output) {
 
     # Reactive UI ------------------------------------------
     output$selectAoi <- renderUI({
-        selectInput('aoi', 'Region of interest', survey.regions(),
+        pickerInput('aoi', 'Region of interest', survey.regions(),
                     selected=survey.regions()[[6]])
     })
 
     output$selectBaseline <- renderUI({
-        selectInput('baseline', 'Compared region', survey.regions(),
+        pickerInput('baseline', 'Compared region', survey.regions(),
                     selected="All")
     })
 
@@ -86,18 +86,30 @@ shinyServer(function(input, output) {
 
     survey.questions.ordered <- reactive({
 
-        if(metric=="entropy"){
+        req(input$metric)
+
+        if(input$metric=="entropy"){
             distance_fn <- function(group){
+
+                # Ignoring answers not read
+                group <- group %>% drop_na() %>%
+                    filter(!grepl("DO NOT READ", answer))
+
+                if(nrow(group)==0){
+                    return(0)
+                }
+
+
                 group <- group %>%
                     mutate(entropy_like=-freq_aoi * freq_baseline * log2(freq_baseline)) %>%
                     # IGNORE ANSWERS WITH DO NOT READ
-                    mutate(entropy_like=ifelse(grepl("DO NOT READ", answer), 0, entropy_like)) %>%
+                    mutate(entropy_like=ifelse(grepl("DO NOT READ", answer), 0, entropy_like))
 
                 return(sum(group$entropy_like))
             }
         }
 
-        if(metric=="area"){
+        if(input$metric=="area"){
             distance_fn <- function(group){
 
                 # Ignoring answers not read
@@ -175,12 +187,18 @@ shinyServer(function(input, output) {
     })
 
 
-    output$plot_box1 <- renderPlot({try(survey.plots.selected()[[1]])})
-    output$plot_box2 <- renderPlot({try(survey.plots.selected()[[2]])})
-    output$plot_box3 <- renderPlot({try(survey.plots.selected()[[3]])})
-    output$plot_box4 <- renderPlot({try(survey.plots.selected()[[4]])})
-    output$plot_box5 <- renderPlot({try(survey.plots.selected()[[5]])})
-    output$plot_box6 <- renderPlot({try(survey.plots.selected()[[6]])})
+    output$plot_box1 <- renderPlot(
+        if(length(survey.plots.selected()) >= 1) survey.plots.selected()[[1]] else NULL)
+    output$plot_box2 <- renderPlot(
+        if(length(survey.plots.selected()) >= 2) survey.plots.selected()[[2]] else NULL)
+    output$plot_box3 <- renderPlot(
+        if(length(survey.plots.selected()) >= 3) survey.plots.selected()[[3]] else NULL)
+    output$plot_box4 <- renderPlot(
+        if(length(survey.plots.selected()) >= 4) survey.plots.selected()[[4]] else NULL)
+    output$plot_box5 <- renderPlot(
+        if(length(survey.plots.selected()) >= 5) survey.plots.selected()[[5]] else NULL)
+    output$plot_box6 <- renderPlot(
+        if(length(survey.plots.selected()) >= 6) survey.plots.selected()[[6]] else NULL)
 
 
     # General Observers -----------------------------------

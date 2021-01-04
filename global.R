@@ -9,6 +9,7 @@ library(glue)
 library(countrycode)
 library(directlabels)
 library(shinydashboard)
+library(shinyWidgets)
 
 
 source('utils.R')
@@ -28,8 +29,8 @@ questions.n <- 6
 # data.regions <- utils.regions(data.raw)
 
 
-metrics <- list("Area between curves"="area",
-                "Entropy-like"="entropy")
+metrics <- list("Neutral"="area",
+                "Sensitive to rare answers"="entropy")
 
 # Keywords to highlight in titles
 keywords <- c("economy", "better off", "worse off", "democracy", "religion", "United States",
@@ -40,7 +41,7 @@ keywords <- c("economy", "better off", "worse off", "democracy", "religion", "Un
               "economic situation","neighboring countries", "traveled", "women", "Vladimir Putin",
               "Angela Merkel", "Muslims", "internet", "jobs", "Kim Jong-Un", "Donald Trump",
               "North Korean", "benefit of all the people", "state", "government", "Emmanuel Macron",
-              "extreme left", "extreme right",
+              "extreme left", "extreme right", "elected officials",
               "freedom of speech", "immigrants", "immigration", "trade", "wages",
               "politicians are corrupt", "major global problems", "U\\.S\\.", "scenarios","crime")
 
