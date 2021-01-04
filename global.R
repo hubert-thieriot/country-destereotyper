@@ -43,4 +43,4 @@ keywords <- c("economy", "better off", "worse off", "democracy", "religion", "Un
               "extreme left", "extreme right",
               "freedom of speech", "immigrants", "immigration", "trade", "wages",
               "politicians are corrupt", "major global problems", "U\\.S\\.", "scenarios","crime")
-rm("data.raw")
+
