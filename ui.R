@@ -35,33 +35,39 @@ shinyUI(dashboardPage(
             )
         ),
         fluidRow(
-            box(width=3,
+            box(width=4,
             # column(width = 2,
                     uiOutput("selectAoi")
                    ),
-            box(width=3,
+            box(width=4,
             # column(width = 2,
                        uiOutput("selectBaseline")
                    ),
-            box(width=3,
+            box(width=4,
             # column(width = 2,
                         selectInput('survey', 'Survey', surveys, selected=surveys[-1])
                    ),
             # column(width = 2,
             #            selectInput('metric', 'Metric', metrics)
             #        ),
-            box(width=3,
-                   sliderInput('questions.n', 'Number of questions', min=1, max=8, value=4)
-                   ),
+            # box(width=3,
+            #        sliderInput('questions.n', 'Number of questions', min=1, max=8, value=4)
+            #        ),
             # class = "rowinput",
 
             ),
 
+        # fluidRow(
+        #     box(width=12,
+        #      plotOutput("plot_questions", height="100%")
+        #     )
+        #  )
         fluidRow(
-            box(width=12,
-             plotOutput("plot_questions", height="100%")
-            )
-         )
+            lapply(seq(1,questions.n),function(x){
+                box(width=6,
+                    plotOutput(paste0("plot_box",x)))
+                })
+        )
        )
     )
 )

@@ -17,6 +17,10 @@ shinyServer(function(input, output) {
 
 
     # Reactive Values ---------------------------------------
+    # questions.n <- reactiveValues(old=0, cur=0)
+    # observeEvent(input$questions.n, {questions.n$old <- questions.n$cur; questions.n$cur <- input$questions.n})
+
+
     survey.data <- reactive({
         req(input$survey)
         surveys.data[[input$survey]]
@@ -124,49 +128,60 @@ shinyServer(function(input, output) {
 
     survey.questions.selected <- reactive({
         survey.questions.ordered() %>%
-            head(input$questions.n) %>%
+            head(questions.n) %>%
             mutate(label=survey.labels()[question]) %>%
             left_join(survey.answers.freq()) %>%
             tidyr::pivot_longer(c(freq_aoi, freq_baseline),
                                 names_prefix="freq_",
                                 names_to="region")
-
     })
 
-    output$plot_questions <- renderPlot({
+    survey.plots.selected <- reactive({
 
         d <- survey.questions.selected()
 
-        #TODO This only works if labels from selected question answers are somehow aligned
-        d$answer <- factor(d$answer,
-                           levels=rev(levels(d$answer)),
-                           labels=gsub("\\(DO NOT READ\\)","",
-                                       gsub(paste0(unique(d$question),"-",collapse="|"),"",
-                                            rev(levels(d$answer)))))
+        questions <- unique(d$question)
+
+        lapply(questions, function(q){
+            dq <- d %>% filter(question==q)
+            dq$answer <- factor(dq$answer,
+                               levels=rev(levels(dq$answer)),
+                               labels=gsub("\\(DO NOT READ\\)","",
+                                           gsub(paste0(unique(dq$question),"-",collapse="|"),"",
+                                                rev(levels(dq$answer)))))
 
 
-        ggplot( d %>%
-                mutate(label=gsub("\\n","<br>",utils.highlight_keywords(str_wrap(label, width=80), keywords)),
-                          region=factor(d$region,c("aoi","baseline"),c(input$aoi,input$baseline))),
-                aes(answer,
-                    value,
-                    group=region,
-                    linetype=region,
-                    col=region)) +
-            geom_line(size=0.8, show.legend = F) +
-            geom_dl(aes(label=region), method="first.bumpup")+
-            scale_linetype_manual(values=c("solid","dashed")) +
-            theme_light(base_size=15) +
-            scale_y_continuous(labels=scales::percent) +
-            facet_wrap(~label, scales="free_x") +
-            scale_x_discrete(labels = function(x) str_wrap(x, width = 15)) +
-            labs(x=NULL,y=NULL) +
-            theme(
-                strip.text = element_markdown(size=14),
-                strip.background=element_rect(fill="#333343")
-            )
-
+            return(ggplot( dq %>%
+                        mutate(label=gsub("\\n","<br>",utils.highlight_keywords(str_wrap(label, width=80), keywords)),
+                               region=factor(dq$region,c("aoi","baseline"),c(input$aoi,input$baseline))),
+                    aes(answer,
+                        value,
+                        group=region,
+                        linetype=region,
+                        col=region)) +
+                geom_line(size=0.8, show.legend = F) +
+                geom_dl(aes(label=region), method="first.bumpup")+
+                scale_linetype_manual(values=c("solid","dashed")) +
+                theme_light(base_size=15) +
+                scale_y_continuous(labels=scales::percent) +
+                facet_wrap(~label, scales="free_x") +
+                scale_x_discrete(labels = function(x) str_wrap(x, width = 15)) +
+                labs(x=NULL,y=NULL) +
+                theme(
+                    strip.text = element_markdown(size=14),
+                    strip.background=element_rect(fill="#333343")
+                ))
+        })
     })
+
+
+    output$plot_box1 <- renderPlot({try(survey.plots.selected()[[1]])})
+    output$plot_box2 <- renderPlot({try(survey.plots.selected()[[2]])})
+    output$plot_box3 <- renderPlot({try(survey.plots.selected()[[3]])})
+    output$plot_box4 <- renderPlot({try(survey.plots.selected()[[4]])})
+    output$plot_box5 <- renderPlot({try(survey.plots.selected()[[5]])})
+    output$plot_box6 <- renderPlot({try(survey.plots.selected()[[6]])})
+
 
     # General Observers -----------------------------------
 

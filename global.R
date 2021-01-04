@@ -19,6 +19,7 @@ surveys <- names(surveys.data)
 
 # Removed from UI for the moment
 metric <- "area"
+questions.n <- 6
 
 # data.labels <- utils.labels(data.raw)
 # data.questions <- utils.questions(data.raw)
